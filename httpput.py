@@ -16,18 +16,18 @@
 import urllib2
 import sys
 
-def httpput(url, data, content_type=None):
+def httpput(url, data, headers={}):
     """
     Upload `data` to `url` via PUT-request
-    Using optional `content_type`
+    Using optional `headers`
     """
 
     opener = urllib2.build_opener()
     request = urllib2.Request(url, data=data)
     
-    # Add content-type header if given
-    if content_type:
-        request.add_header('Content-Type', content_type)
+    # Add headers if given
+    for header in headers:
+        request.add_header(header, headers[header])
     
     # Replace get_method with something that returns PUT all the time
     request.get_method = lambda: 'PUT'
@@ -42,7 +42,7 @@ def httpput(url, data, content_type=None):
 def main():
     """Interactive usage example of httpput()"""
     if len(sys.argv) != 3:
-        print "Usage: %s <file>  <url>" % sys.argv[0]
+        print "Usage: %s <file> <url>" % sys.argv[0]
         sys.exit(1)
     
     httpput(sys.argv[2], open(sys.argv[1]).read())
